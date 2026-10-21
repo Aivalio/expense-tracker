@@ -1,0 +1,52 @@
+# Python / Backend
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-error.log*
+coverage/
+.jest-cache/
+
+
+# Secrets & Config
+.env
+.env.local
+.env.production
+*.env
+!.env.example
+
+# Database
+*.db
+*.sqlite3
+*.sqlite
+
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# App data
+*.log
+logs/
+data/
+uploads/
+.dockerignore
