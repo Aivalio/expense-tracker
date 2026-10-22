@@ -28,4 +28,4 @@ class User(Base):
 
     def __repr__(self) -> str:
         """Developer friendly function that returns a short model description (email)"""
-        return f"<Category {self.email}>"
+        return f"<User{self.email}>"
