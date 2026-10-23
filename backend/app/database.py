@@ -34,3 +34,10 @@ def get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
+
+
+def init_db() -> None:
+    """Create all tables in the database."""
+    from app.models import User, Category, Expense  # noqa: F401
+
+    Base.metadata.create_all(bind=engine)
