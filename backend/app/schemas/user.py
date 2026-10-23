@@ -15,7 +15,7 @@ class UserLogin(BaseModel):
     password: str
 
 
-class UserRegister(BaseModel):
+class UserResponse(BaseModel):
     """A Schema for returning user data."""
     id: int
     email: EmailStr
