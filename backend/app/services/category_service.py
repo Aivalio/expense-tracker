@@ -1,11 +1,10 @@
 """Category service: holds the business logic for creating a category."""
-from ast import List
 from sqlalchemy.orm import Session
 from app.models import Category, User
 from app.schemas.category import CategoryCreate
 
 
-def get_categories(db: Session, user: User) -> List[Category]:
+def get_categories(db: Session, user: User) -> list[Category]:
     """Function to get all categories that belong to a user."""
     return db.query(Category).filter(Category.user_id == user.id).all()
 
