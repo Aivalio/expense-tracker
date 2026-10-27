@@ -5,17 +5,16 @@ from app.models import User
 from app.schemas import UserCreate
 
 
-def create_user(db: Session, user_in: User) -> User:
-    """Function that creates a new user with a hashed password and returns it"""
+def create_user(db: Session, user_in: UserCreate) -> User:
+    """Create a new user with a hashed password."""
     db_user = User(
         email=user_in.email,
-        password_hash=hash_password(user_in.password_hash),
+        password_hash=hash_password(user_in.password), # <-- Η ΔΙΟΡΘΩΣΗ ΕΙΝΑΙ ΕΔΩ
         full_name=user_in.full_name,
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-
     return db_user
 
 

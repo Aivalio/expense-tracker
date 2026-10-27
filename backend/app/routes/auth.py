@@ -1,4 +1,7 @@
 """Routes for Authentication: Login & Register."""
+from app.core.dependencies import get_current_user
+from app.models import User
+
 from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext import serializer
@@ -41,3 +44,9 @@ def login(
 
     access_token = create_access_token(subject=user.email)
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/me", response_model=UserResponse)
+def read_current_user(current_user: User = Depends(get_current_user)):
+    """Get current logged-in user details"""
+    return current_user
