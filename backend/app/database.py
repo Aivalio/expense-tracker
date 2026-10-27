@@ -16,6 +16,7 @@ engine = create_engine(
     echo=settings.DEBUG,       # Show SQL in dev
     pool_pre_ping=True,         # Test connections before use
     pool_recycle=300,           # Recycle every 5 min
+    connect_args={"connect_timeout": 5}
 )
 
 # Session factory: creates new sessions on demand
