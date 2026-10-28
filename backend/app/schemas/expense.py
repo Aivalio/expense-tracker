@@ -1,13 +1,13 @@
 """Pydantic Schema for creating a category."""
 from pydantic import BaseModel, Field
-from datetime import date
+import datetime as dt
 
 
 class ExpenseCreate(BaseModel):
     """Class for creating a category."""
     amount: float = Field(gt=0, description="Amount of expense must be greater than 0")
     category_id: int
-    date: date | None = None
+    date: dt.date | None = None
     description: str | None = None
 
 
@@ -16,7 +16,7 @@ class ExpenseResponse(BaseModel):
     id: int
     amount: float
     category_id: int
-    date: date
+    date: dt.date
     description: str | None = None
 
     class Config:

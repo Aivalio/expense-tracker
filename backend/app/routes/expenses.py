@@ -9,7 +9,7 @@ from app.schemas.expense import ExpenseCreate, ExpenseResponse
 from app.services.expense_service import create_expense, get_expenses
 
 
-router = APIRouter(prefix="/expenses", tags=["Expenses"])
+router = APIRouter(prefix="/expenses", tags=["expenses"])
 
 
 @router.get("/", response_model=list[ExpenseResponse])
