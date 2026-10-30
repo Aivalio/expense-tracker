@@ -3,6 +3,7 @@
 A full-stack expense tracker built with **FastAPI**, **PostgreSQL** and **Vanilla JavaScript**.
 
 ![Status](https://img.shields.io/badge/status-under%20construction-yellow)
+[![Backend CI](https://github.com/Aivalio/expense-tracker/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/Aivalio/expense-tracker/actions/workflows/backend-ci.yml)
 
 ## 🚧 Status
 
