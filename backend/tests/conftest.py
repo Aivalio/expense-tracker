@@ -3,51 +3,38 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
 from app.database import Base, get_db
 from app.main import app
 from app.models import User, Category, Expense
 
 
-# Create an in-memory SQLite database for the tests
-SQLALCHEMY_DATABASE_URL = "sqlite:///db.sqlite3"
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
+@pytest.fixture(scope="function")
+def db_session(tmp_path):
+    """Create a fresh database for each test using a temp file."""
+    db_file = tmp_path / "test.db"
+    engine = create_engine(f"sqlite:///{db_file}", connect_args={"check_same_thread": False})
+    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-TestingSessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine)
-
-
-# Replace/Override the project database with a test database
-def override_get_db():
-    try:
-        db = TestingSessionLocal()
-        yield db
-    finally:
-        db.close()
-
-app.dependency_overrides[get_db] = override_get_db
-
-
-@pytest.fixture(scope="session", autouse=True)
-def setup_db():
-    """Create tables before testing them and then delete them"""
     Base.metadata.create_all(bind=engine)
+
+    def override_get_db():
+        db = TestingSessionLocal()
+        try:
+            yield db
+        finally:
+            db.close()
+
+    app.dependency_overrides[get_db] = override_get_db
     yield
-    Base.metadata.drop_all(bind=engine)
+    engine.dispose()
 
 
 @pytest.fixture
-def client():
-    """Create and configure a rest client"""
-    with TestClient(app) as client:
-        yield client
+def client(db_session):
+    """Create and configure a rest client."""
+    with TestClient(app) as c:
+        yield c
 
 
 @pytest.fixture
@@ -61,10 +48,9 @@ def test_user(client):
     client.post("/auth/register", json=user_data)
 
     login_data = {
-        "email": "nikos@test.com",
+        "username": "nikos@test.com",
         "password": "password123",
     }
-
     response = client.post("/auth/login", data=login_data)
     token = response.json()["access_token"]
 
