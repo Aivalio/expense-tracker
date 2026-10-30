@@ -35,7 +35,7 @@ def override_get_db():
 app.dependency_overrides[get_db] = override_get_db
 
 
-@pytest.fixture
+@pytest.fixture(scope="session", autouse=True)
 def setup_db():
     """Create tables before testing them and then delete them"""
     Base.metadata.create_all(bind=engine)
@@ -65,7 +65,7 @@ def test_user(client):
         "password": "password123",
     }
 
-    response = client.post("/auth/login", json=login_data)
+    response = client.post("/auth/login", data=login_data)
     token = response.json()["access_token"]
 
     return {"Authorization": f"Bearer {token}"}
