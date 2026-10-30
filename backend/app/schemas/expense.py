@@ -1,5 +1,5 @@
 """Pydantic Schema for creating a category."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 import datetime as dt
 
 
@@ -19,5 +19,4 @@ class ExpenseResponse(BaseModel):
     date: dt.date
     description: str | None = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
