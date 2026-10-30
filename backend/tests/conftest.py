@@ -41,3 +41,31 @@ def setup_db():
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
+
+
+@pytest.fixture
+def client():
+    """Create and configure a rest client"""
+    with TestClient(app) as client:
+        yield client
+
+
+@pytest.fixture
+def test_user(client):
+    """Create a user, log him in and return the token."""
+    user_data = {
+        "email": "nikos@test.com",
+        "password": "password123",
+        "full_name": "Test User",
+    }
+    client.post("/auth/register", json=user_data)
+
+    login_data = {
+        "email": "nikos@test.com",
+        "password": "password123",
+    }
+
+    response = client.post("/auth/login", json=login_data)
+    token = response.json()["access_token"]
+
+    return {"Authorization": f"Bearer {token}"}
