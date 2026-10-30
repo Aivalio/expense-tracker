@@ -1,5 +1,5 @@
 """Security utilities: password hashing & JWT"""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import jwt
 from passlib.context import CryptContext
 from app.config import settings
@@ -20,15 +20,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(subject: str | int) -> str:
-    """Create a JWT access token
+    """Create a JWT access token."""
+    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    Args:
-        subject (str): subject of the access token. Usually the user ID or email.
-    Returns:
-        The encoded JWT access token.
-    """
-    expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode = {"exp": expire, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-
     return encoded_jwt

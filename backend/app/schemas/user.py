@@ -1,5 +1,5 @@
 """Pydantic schemas for the User."""
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
 class UserCreate(BaseModel):
@@ -21,5 +21,4 @@ class UserResponse(BaseModel):
     email: EmailStr
     full_name: str | None = None
 
-    class Config:
-        from_attributes = True # Allows reading SQLAlchemy Models
+    model_config = ConfigDict(from_attributes=True)

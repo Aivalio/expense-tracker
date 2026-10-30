@@ -46,7 +46,7 @@ def login(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/me", response_model=UserResponse)
+@router.get("/me", response_model=UserResponse)
 def read_current_user(current_user: User = Depends(get_current_user)):
     """Get current logged-in user details"""
     return current_user

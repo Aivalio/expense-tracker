@@ -18,20 +18,19 @@ def create_expense(db: Session, user: User, expense_in: ExpenseCreate) -> Expens
     Raises:
         ValueError: If the category does not exist or does not belong to the user.
     """
-
     # Security checking that the category belongs indeed to the user
-    category = db.query(Expense).filter(
-        Expense.category_id == expense_in.category_id,
-        Expense.user_id == user.id
+    category = db.query(Category).filter(
+        Category.id == expense_in.category_id,
+        Category.user_id == user.id
     ).first()
 
     if not category:
-        raise ValueError(f"Category not found or does belong to you.")
+        raise ValueError("Category not found or does not belong to you.")
 
     # Create a new expense
     expense = Expense(
         user_id=user.id,
-        category_id = category.id,
+        category_id=category.id,  # <-- Παίρνουμε το ID από την κατηγορία που βρήκαμε
         amount=expense_in.amount,
         description=expense_in.description,
         date=expense_in.date or date.today()
