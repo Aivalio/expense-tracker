@@ -9,28 +9,28 @@ def test_create_category(client, test_user):
 
 
 def test_create_expense(client, test_user):
-    # 1. Φτιάχνουμε κατηγορία
+    # Create an expense category first
     cat_res = client.post("/categories/", json={
         "name": "Transport", "color": "#0000ff"
     }, headers=test_user)
 
-    # --- DEBUG: Ας δούμε τι επιστρέφει η κατηγορία ---
+    # Debugging lines 
     print("\n--- DEBUG CATEGORY RESPONSE ---")
     print(cat_res.status_code)
     print(cat_res.json())
     print("-------------------------------\n")
 
-    # 2. Παίρνουμε το ID από το JSON response
+    # Get the ID from the JSON response
     category_id = cat_res.json()["id"]
 
-    # 3. Φτιάχνουμε το έξοδο
+    # Create a response output
     response = client.post("/expenses/", json={
         "amount": 15.50,
         "category_id": category_id,
         "description": "Bus ticket"
     }, headers=test_user)
 
-    # --- DEBUG: Ας δούμε τι λέει ο server αν αποτύχει ---
+    # Print what the server says for debugging 
     if response.status_code != 201:
         print("\n--- DEBUG EXPENSE ERROR ---")
         print(response.json())
