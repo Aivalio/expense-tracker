@@ -4,7 +4,7 @@ const API_URL = "http:///127.0.0.1:8001";
 /** 
  * Helper function to make requests to my API.
  * Responsible for handling the JWT token if it exists
-*/
+**/
 
 async function fetchAPI(endpoint, options = {}) {
     // Get the JWT token from localStorage
