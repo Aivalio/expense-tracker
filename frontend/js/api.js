@@ -1,5 +1,5 @@
 // The local Backend URL
-const API_URL = "http:///127.0.0.1:8001";
+const API_URL = "http://127.0.0.1:8001";
 
 /** 
  * Helper function to make requests to my API.
@@ -22,7 +22,7 @@ async function fetchAPI(endpoint, options = {}) {
     }
 
     // Make the FastAPI request
-    const response = await fetch(`${API_URL}/${endpoint}`, {
+        const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers,
     });
