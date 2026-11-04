@@ -22,7 +22,7 @@ async function fetchAPI(endpoint, options = {}) {
     }
 
     // Make the FastAPI request
-        const response = await fetch(`${API_URL}${endpoint}`, {
+    const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers,
     });
