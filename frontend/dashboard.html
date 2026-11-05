@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker - Dashboard</title>
+    <!-- Tailwind CSS CDN (ΑΥΤΟ ΕΙΝΑΙ ΠΟΥ ΛΕΙΠΕΙ) -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -28,30 +29,62 @@
         </div>
     </nav>
 
-    <!-- Main Dashboard Content -->
+    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <div class="bg-white rounded-lg shadow p-6 mb-8 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Welcome to your personal Dashboard!</h1>
-                <p class="text-gray-500 mt-1">Here you will soon see your expenses and statistics.</p>
-            </div>
-            <button
-                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium shadow-sm transition-colors">
-                + Add Expense
-            </button>
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Welcome to your Dashboard!</h1>
+            <p class="text-gray-500 mt-1">Manage your expenses here.</p>
         </div>
 
-        <!-- Placeholder for the Expenses -->
-        <div class="bg-white rounded-lg shadow p-12 text-center">
-            <p class="text-gray-500 text-lg">No expenses added yet.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Add Expense Form -->
+            <div class="md:col-span-1">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Add New Expense</h2>
+                    <form id="expenseForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Amount (€)</label>
+                            <input type="number" id="amount" step="0.01" min="0.01" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Category</label>
+                            <select id="category" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Loading categories...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <input type="text" id="description" placeholder="e.g. Lunch"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium shadow-sm transition-colors">
+                            Save Expense
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Expenses List -->
+            <div class="md:col-span-2">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Expenses</h2>
+                    <div id="expensesList" class="space-y-3">
+                        <p class="text-gray-500">Loading expenses...</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
 
-    <!-- Scripts -->
+    <!-- Connect the Dashboard to JavaScript code -->
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/expenses.js"></script>
 </body>
 
 </html>
