@@ -1,5 +1,5 @@
 // The local Backend URL
-const API_URL = "http://127.0.0.1:8001";
+const API_URL = "https://expense-tracker-api-yyv8.onrender.com";
 
 /** 
  * Helper function to make requests to my API.
