@@ -15,8 +15,13 @@ app = FastAPI(
 )
 
 
-# CORS (allow the communication and data exchange between Frontend & Backend)
-origins = [o.strip() for o in settings.CORS_ORIGIN.split(",")]
+# --- CORS Configuration ---
+origins = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "https://expense-tracker-frontend-five-drab.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
