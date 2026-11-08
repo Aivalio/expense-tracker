@@ -25,8 +25,8 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "postgresql://user:password@localhost:5432/expense_tracker"
 
-    # CORS (Frontend URLs)
-    CORS_ORIGIN: str = "http://localhost:5500,http://127.0.0.1:5500"
+    # CORS (frontend URLs)
+    CORS_ORIGINS: str = "http://localhost:5500,http://127.0.0.1:5500"
 
 
 # Singleton

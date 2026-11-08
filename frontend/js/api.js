@@ -1,6 +1,3 @@
-// The local Backend URL
-const API_URL = "https://expense-tracker-api-yyv8.onrender.com";
-
 /** 
  * Helper function to make requests to my API.
  * Responsible for handling the JWT token if it exists
@@ -22,7 +19,7 @@ async function fetchAPI(endpoint, options = {}) {
     }
 
     // Make the FastAPI request
-    const response = await fetch(`${API_URL}${endpoint}`, {
+    const response = await fetch(`${CONFIG.API_URL}${endpoint}`, {
         ...options,
         headers,
     });
