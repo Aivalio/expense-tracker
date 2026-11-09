@@ -40,3 +40,22 @@ def create_expense(db: Session, user: User, expense_in: ExpenseCreate) -> Expens
     db.commit()
     db.refresh(expense)
     return expense
+
+
+def delete_expense(db: Session, user: User, expense_id: int) -> bool:
+    """Function that deletes an expense if it belongs to the user.
+
+    Raises:
+        ValueError: If the expense does not exist or does not belong to the user.
+    """
+    expense = db.query(Expense).filter(
+        Expense.id == expense_id,
+        Expense.user_id == user.id
+    ).first()
+
+    if not expense:
+        raise ValueError("Expense not found or does not belong to you.")
+
+    db.delete(expense)
+    db.commit()
+    return True

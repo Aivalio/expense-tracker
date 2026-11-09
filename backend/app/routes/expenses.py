@@ -6,7 +6,7 @@ from app.core.dependencies import get_current_user
 from app.database import get_db
 from app.models import User
 from app.schemas.expense import ExpenseCreate, ExpenseResponse
-from app.services.expense_service import create_expense, get_expenses
+from app.services.expense_service import create_expense, get_expenses, delete_expense
 
 
 router = APIRouter(prefix="/expenses", tags=["expenses"])
@@ -30,4 +30,19 @@ def add_expense(
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e))
+
+
+@router.delete("/{expense_id}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_expense(
+        expense_id: int,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user),
+):
+    """Function that removes an expense from the database"""
+    try:
+        return delete_expense(db, current_user, expense_id)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_NOT_FOUND,
             detail=str(e))
