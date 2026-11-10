@@ -5,21 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker - Dashboard</title>
-    <!-- Tailwind CSS CDN (ΑΥΤΟ ΕΙΝΑΙ ΠΟΥ ΛΕΙΠΕΙ) -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body class="bg-gray-100 min-h-screen">
-
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center">
-                    <span class="text-xl font-bold text-gray-800">💰 Expense Tracker</span>
+                    <span class="text-xl font-bold text-gray-800">
+                        💰 Expense Tracker
+                    </span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span id="userEmail" class="text-sm text-gray-600 font-medium"></span>
+                    <span id="userEmail" class="text-sm text-gray-600 font-medium">
+                    </span>
                     <button id="logoutBtn"
                         class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
                         Logout
@@ -28,35 +29,64 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
+        <!-- Dashboard Welcome -->
         <div class="bg-white rounded-lg shadow p-6 mb-8">
-            <h1 class="text-2xl font-bold text-gray-800">Welcome to your Dashboard!</h1>
-            <p class="text-gray-500 mt-1">Manage your expenses here.</p>
+            <h1 class="text-2xl font-bold text-gray-800">
+                Welcome to your Dashboard!
+            </h1>
+            <p class="text-gray-500 mt-1">
+                Manage your expenses here.
+            </p>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Add Expense Form -->
             <div class="md:col-span-1">
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Add New Expense</h2>
+                    <!-- Add Category Form -->
+                    <div class="bg-white rounded-lg shadow p-6 mb-6 border-t-4 border-green-500">
+                        <h2 class="text-lg font-bold text-gray-800 mb-4">
+                            Create New Category
+                        </h2>
+                        <form id="categoryForm" class="flex space-x-2">
+
+                            <input type="text" id="newCategoryName" placeholder="e.g. Food, Transport" required
+                                class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500 text-sm">
+                            <button type="submit"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium shadow-sm transition-colors text-sm">
+                                Add
+                            </button>
+                        </form>
+                    </div>
+                    <!-- Expense Form -->
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">
+                        Add New Expense
+                    </h2>
                     <form id="expenseForm" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Amount (€)</label>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Amount (€)
+                            </label>
                             <input type="number" id="amount" step="0.01" min="0.01" required
                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Category</label>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Category
+                            </label>
                             <select id="category" required
                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">Loading categories...</option>
+                                <option value="">
+                                    Loading categories...
+                                </option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Description</label>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Description
+                            </label>
                             <input type="text" id="description" placeholder="e.g. Lunch"
                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
                         </div>
@@ -71,21 +101,24 @@
             <!-- Expenses List -->
             <div class="md:col-span-2">
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Expenses</h2>
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">
+                        Recent Expenses
+                    </h2>
                     <div id="expensesList" class="space-y-3">
-                        <p class="text-gray-500">Loading expenses...</p>
+                        <p class="text-gray-500">
+                            Loading expenses...
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-
     </main>
 
-    <!-- Connect the Dashboard to JavaScript code -->
+    <!-- Connect Dashboard to JavaScript -->
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/expenses.js"></script>
-</body>
 
+</body>
 </html>
