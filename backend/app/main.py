@@ -26,15 +26,6 @@ app.add_middleware(
 )
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 app.include_router(auth_router)
 app.include_router(categories_router)
 app.include_router(expenses_router)
