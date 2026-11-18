@@ -37,3 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Export for Jest testing if needed
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = {};
+}

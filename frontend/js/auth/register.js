@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
         registerForm.addEventListener("submit", async (e) => {
             e.preventDefault(); // Stop the page from refreshing on form submission
 
-
             // Get the user data from the form inputs
             const full_name = document.getElementById("full_name").value;
             const email = document.getElementById("email").value;
@@ -39,3 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Export for Jest testing if needed
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = {};
+}
