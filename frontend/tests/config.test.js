@@ -1,3 +1,4 @@
+// Config test to ensure the local API URL is set correctly in the config.js file
 const fs = require('fs');
 const path = require('path');
 
