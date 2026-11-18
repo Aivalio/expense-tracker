@@ -1,48 +1,44 @@
-// Create a mock fetch to avoid triggering actual network requests during tests
+const { fetchAPI } = require('../js/api');
+
+// Mock global fetch
 global.fetch = jest.fn();
 
-// Mock the CONFIG object to provide a dummy API URL for testing
-global.CONFIG = {
-  API_URL: 'http://localhost:8001'
-};
-
-
-describe("API Wrapper", () => {
+describe('API Fetch Wrapper', () => {
     beforeEach(() => {
-        // Clear the mock fetch and localStorage before each test to ensure a clean state
-        fetch.mockClear();
+        jest.clearAllMocks();
         localStorage.clear();
     });
 
-    test("should add Authorization header when token is present in localStorage", async () => {
-        // Set a dummy token in localStorage
-        localStorage.setItem('access_token', 'fake-jwt-token');
-
-        // Create a fake request object to simulate an API call
+    test('should include Authorization header when token exists in localStorage', async () => {
+        localStorage.setItem('access_token', 'mock-jwt-token');
+        
         fetch.mockResolvedValueOnce({
+            status: 200,
             ok: true,
-            json: async () => ({ message: 'success' })
+            text: async () => JSON.stringify({ success: true })
         });
 
-        // Define the endpoint and headers for the API call
-        const endpoint = "/test";
-        const headers = {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer fake-jwt-token`,
-        };
+        const data = await fetchAPI('/test-endpoint');
         
-        // Make the API call using fetch with the defined headers
-        await fetch("http://localhost:8001/test", { headers });
-
-        expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith(
-            "http://localhost:8001/test",
-            // Use expect.objectContaining to check that the headers include the Authorization header
+            expect.any(String),
             expect.objectContaining({
                 headers: expect.objectContaining({
-                    "Authorization": "Bearer fake-jwt-token",
-                }),
+                    'Authorization': 'Bearer mock-jwt-token',
+                    'Content-Type': 'application/json'
+                })
             })
         );
+        expect(data).toEqual({ success: true });
+    });
+
+    test('should throw an error when response is not ok', async () => {
+        fetch.mockResolvedValueOnce({
+            status: 400,
+            ok: false,
+            text: async () => JSON.stringify({ detail: 'Invalid request' })
+        });
+
+        await expect(fetchAPI('/bad-endpoint')).rejects.toThrow('Invalid request');
     });
 });
