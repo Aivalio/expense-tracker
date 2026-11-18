@@ -18,7 +18,9 @@ async function fetchAPI(endpoint, options = {}) {
     }
 
     // Determine base URL safely
-    const baseUrl = typeof CONFIG !== "undefined" ? CONFIG.API_URL : "http://127.0.0.1:8001";
+    const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8001"
+    : "https://expense-tracker-api-yyv8.onrender.com";
 
     // Make the API request
     const response = await fetch(`${baseUrl}${endpoint}`, {
