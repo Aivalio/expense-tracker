@@ -1,35 +1,66 @@
-/** 
- * Helper function to make requests to my API.
- * Responsible for handling the JWT token if it exists
-**/
-
+/**
+ * Helper function to make requests to the API.
+ * Handles JWT authentication, request headers and API responses.
+ */
 async function fetchAPI(endpoint, options = {}) {
-    // Get the JWT token from localStorage
+    // Retrieve the JWT token from localStorage
     const token = localStorage.getItem("access_token");
 
-    // Handle & config the headers
+    // Configure request headers
     const headers = {
         "Content-Type": "application/json",
         ...options.headers,
     };
 
-    // If the token exists, add it to the headers
+    // Add JWT authentication when a token exists
     if (token) {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    // Make the FastAPI request
-    const response = await fetch(`${CONFIG.API_URL}${endpoint}`, {
+    // Determine base URL safely
+    const baseUrl = typeof CONFIG !== "undefined" ? CONFIG.API_URL : "http://127.0.0.1:8001";
+
+    // Make the API request
+    const response = await fetch(`${baseUrl}${endpoint}`, {
         ...options,
         headers,
     });
-    
-    // If the response is not ok, throw an error
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "An error occurred while fetching the API.");
+
+    // Handle responses without a body (HTTP 204)
+    if (response.status === 204) {
+        return null;
     }
-    return await response.json();
+
+    // Read the response body
+    const responseText = await response.text();
+
+    // Parse JSON when possible
+    let responseData = null;
+
+    if (responseText) {
+        try {
+            responseData = JSON.parse(responseText);
+        } catch {
+            responseData = responseText;
+        }
+    }
+
+    // Handle unsuccessful responses
+    if (!response.ok) {
+        const errorMessage =
+            typeof responseData === "object" && responseData !== null
+                ? responseData.detail || responseData.message
+                : responseData;
+
+        throw new Error(
+            errorMessage || "An error occurred while fetching the API."
+        );
+    }
+
+    return responseData;
 }
 
-
+// Export the function for Jest (without affecting browser scripts)
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = { fetchAPI };
+}
