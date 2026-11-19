@@ -23,6 +23,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categorySelect = document.getElementById("category");
     const expensesList = document.getElementById("expensesList");
     const categoryForm = document.getElementById("categoryForm");
+    const searchInput = document.getElementById("searchInput"); // <-- Search Input
+
+    // Global array to store fetched expenses for client-side filtering
+    let allExpenses = [];
     
     // 2. CHECK USER AUTHENTICATION
     const token = localStorage.getItem("access_token");
@@ -59,6 +63,67 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
+    // Helper function to render a given array of expenses
+    function renderExpenses(expensesToRender) {
+        expensesList.innerHTML = "";
+
+        if (!expensesToRender || expensesToRender.length === 0) {
+            expensesList.innerHTML =
+                '<p class="text-gray-500 text-center py-4">No matching expenses found.</p>';
+            return;
+        }
+
+        expensesToRender.forEach((exp) => {
+            const div = document.createElement("div");
+            div.className =
+                "flex justify-between items-center p-4 border border-gray-200 rounded-lg bg-white shadow-sm mb-2 hover:bg-gray-50 transition-colors";
+            
+            const details = document.createElement("div");
+            const description = document.createElement("p");
+            description.className = "font-bold text-gray-800";
+            description.textContent = exp.description || "Expense";
+
+            const date = document.createElement("p");
+            date.className = "text-xs text-gray-500 mt-1";
+            date.textContent = "📅 " + (exp.date || "Date unavailable");
+
+            details.appendChild(description);
+            details.appendChild(date);
+
+            const actions = document.createElement("div");
+            actions.className = "flex items-center space-x-4";
+
+            const amount = document.createElement("div");
+            amount.className = "text-lg font-bold text-red-600";
+            amount.textContent = "-€" + Number(exp.amount).toFixed(2);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className =
+                "text-gray-400 hover:text-red-600 transition-colors";
+            deleteButton.title = "Delete expense";
+            deleteButton.setAttribute("aria-label", "Delete expense");
+
+            deleteButton.innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                    </path>
+                </svg>
+            `;
+
+            deleteButton.addEventListener("click", () => {
+                deleteExpense(exp.id);
+            });
+
+            actions.appendChild(amount);
+            actions.appendChild(deleteButton);
+
+            div.appendChild(details);
+            div.appendChild(actions);
+            expensesList.appendChild(div);
+        });
+    }
+
     // 4. LOAD AND DISPLAY EXPENSES
     async function loadExpenses() {
         try {
@@ -66,69 +131,32 @@ document.addEventListener("DOMContentLoaded", async () => {
                 '<p class="text-gray-500 text-center py-4">Loading expenses...</p>';
 
             const expenses = await fetchAPI("/expenses/");
-            expensesList.innerHTML = "";
+            allExpenses = expenses || []; // Save to global array
 
-            if (!expenses || expenses.length === 0) {
+            if (allExpenses.length === 0) {
                 expensesList.innerHTML =
                     '<p class="text-gray-500 text-center py-4">No expenses yet. Add one on the left!</p>';
                 return;
             }
 
-            expenses.forEach((exp) => {
-                const div = document.createElement("div");
-                div.className =
-                    "flex justify-between items-center p-4 border border-gray-200 rounded-lg bg-white shadow-sm mb-2 hover:bg-gray-50 transition-colors";
-                
-                const details = document.createElement("div");
-                const description = document.createElement("p");
-                description.className = "font-bold text-gray-800";
-                description.textContent = exp.description || "Expense";
-
-                const date = document.createElement("p");
-                date.className = "text-xs text-gray-500 mt-1";
-                date.textContent = "📅 " + (exp.date || "Date unavailable");
-
-                details.appendChild(description);
-                details.appendChild(date);
-
-                const actions = document.createElement("div");
-                actions.className = "flex items-center space-x-4";
-
-                const amount = document.createElement("div");
-                amount.className = "text-lg font-bold text-red-600";
-                amount.textContent = "-€" + Number(exp.amount).toFixed(2);
-
-                const deleteButton = document.createElement("button");
-                deleteButton.className =
-                    "text-gray-400 hover:text-red-600 transition-colors";
-                deleteButton.title = "Delete expense";
-                deleteButton.setAttribute("aria-label", "Delete expense");
-
-                deleteButton.innerHTML = `
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                        </path>
-                    </svg>
-                `;
-
-                deleteButton.addEventListener("click", () => {
-                    deleteExpense(exp.id);
-                });
-
-                actions.appendChild(amount);
-                actions.appendChild(deleteButton);
-
-                div.appendChild(details);
-                div.appendChild(actions);
-                expensesList.appendChild(div);
-            });
+            renderExpenses(allExpenses);
 
         } catch (error) {
             console.error("Error loading expenses:", error);
             expensesList.innerHTML =
                 '<p class="text-red-500 text-center">Failed to load expenses.</p>';
         }
+    }
+
+    // 4.1 SEARCH EVENT LISTENER
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const filtered = allExpenses.filter(exp => 
+                (exp.description && exp.description.toLowerCase().includes(query))
+            );
+            renderExpenses(filtered);
+        });
     }
     
     // 5. CREATE A NEW EXPENSE
@@ -234,7 +262,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
 
             await loadExpenses();
-            // Optional: could show a notification if needed
 
         } catch (error) {
             console.error("Error deleting expense:", error);
