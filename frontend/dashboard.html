@@ -11,13 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="bg-slate-50 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
     <!-- Navbar -->
     <header class="bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <span class="text-xl font-bold text-slate-800">💰 Expense Tracker</span>
+                <div class="brand-badge flex items-center space-x-2">
+                    <span class="text-xl">💰</span>
+                    <span class="text-base font-bold text-blue-900 tracking-tight">Expense Tracker</span>
+                </div>
             </div>
             <div class="flex items-center space-x-4">
                 <span id="userEmail" class="text-sm text-slate-600 font-medium hidden sm:inline"></span>
@@ -28,9 +31,24 @@
             </div>
         </div>
     </header>
+   
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
+
+        <!-- Budget Warning Banner (Dynamic) -->
+        <div id="budgetWarningBanner"
+            class="hidden bg-red-600 border border-red-700 text-white px-6 py-4 rounded-xl shadow-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">⚠️</span>
+                <div>
+                    <h4 class="font-bold text-sm">Budget Exceeded Warning!</h4>
+                    <p id="budgetWarningText" class="text-xs text-red-100 mt-0.5">You have exceeded your monthly budget
+                        limit.</p>
+                </div>
+            </div>
+            <span id="budgetOverspendAmount" class="text-sm font-bold bg-red-800 px-3 py-1 rounded-lg"></span>
+        </div>
 
         <!-- Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -69,6 +87,23 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left Column: Forms -->
             <div class="lg:col-span-1 space-y-6">
+                <!-- Monthly Budget Card -->
+                <div class="card-corporate p-6 border-t-4 border-amber-500">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Monthly Budget</h2>
+                    <p class="text-xs text-slate-500 mb-4">Set a spending limit for the current month.</p>
+                    <div class="space-y-3">
+                        <div class="flex space-x-2">
+                            <input type="number" id="budgetInput" step="10" min="0" placeholder="e.g. 500"
+                                class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm text-slate-800">
+                            <button id="saveBudgetBtn" type="button"
+                                class="px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
+                                Set
+                            </button>
+                        </div>
+                        <div id="budgetMessage" class="hidden p-3 rounded-lg text-xs font-medium"></div>
+                    </div>
+                </div>
+
                 <!-- Add Category Form -->
                 <div class="card-corporate p-6 border-t-4 border-emerald-500">
                     <h2 class="text-lg font-bold text-slate-800 mb-4">Create New Category</h2>
