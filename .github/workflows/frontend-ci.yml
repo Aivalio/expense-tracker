@@ -3,6 +3,7 @@ name: Frontend CI
 on:
   push:
     branches: [ "main", "feature/*" ]
+    # Paths to trigger the workflow only when changes are made in the frontend directory
     paths:
       - 'frontend/**'
   pull_request:
