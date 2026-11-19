@@ -81,7 +81,7 @@
                                 Add
                             </button>
                         </div>
-                        <!-- Μήνυμα ακριβώς κάτω από το κουμπί Add -->
+                        <!-- Success Message for Category -->
                         <div id="categoryMessage" class="hidden p-3 rounded-lg text-xs font-medium"></div>
                     </form>
                 </div>
@@ -121,11 +121,18 @@
                 <div class="card-corporate p-6">
                     <h2 class="text-lg font-bold text-slate-800 mb-4">Recent Expenses</h2>
 
-                    <!-- Search Bar -->
-                    <div class="mb-4">
+                    <!-- Search Bar & Export CSV στην ίδια ευθεία -->
+                    <div class="flex items-center w-full mb-3">
                         <input type="text" id="searchInput" placeholder="Search expenses by description..."
-                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+
+                        <button id="exportCsvBtn" type="button" class="text-sm font-medium shadow-sm transition">
+                            📥 Export to CSV
+                        </button>
                     </div>
+
+                    <!-- Success Message for CSV -->
+                    <div id="csvMessage" class="hidden p-3 rounded-lg text-xs font-medium mb-3"></div>
 
                     <div id="expensesList" class="space-y-3">
                         <p class="text-slate-500 text-sm">Loading expenses...</p>

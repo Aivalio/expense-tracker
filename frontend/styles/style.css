@@ -43,8 +43,9 @@ body {
     letter-spacing: 0.05em;
 }
 
-/* Corporate Button Fix */
-button[type="submit"] {
+/* Corporate Button Fix (Submit & Export CSV) */
+button[type="submit"],
+#exportCsvBtn {
     background-color: #059669 !important;
     color: #ffffff !important;
     padding: 0.5rem 1rem !important;
@@ -52,16 +53,25 @@ button[type="submit"] {
     font-weight: 500 !important;
     white-space: nowrap !important;
     cursor: pointer !important;
+    flex-shrink: 0 !important;
 }
 
 #expenseForm button[type="submit"] {
     background-color: #2563eb !important;
 }
 
-button[type="submit"]:hover {
+button[type="submit"]:hover,
+#exportCsvBtn:hover {
     opacity: 0.9;
 }
 
+/* Search & Export Row Layout Fix */
+#searchInput {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin-right: 0.5rem !important;
+}
 
 /* Dashboard Notification Message Styling */
 #dashboardMessage {
@@ -70,14 +80,16 @@ button[type="submit"]:hover {
 
 /* Force Corporate Notification Backgrounds */
 #categoryMessage:not(.hidden),
-#expenseMessage:not(.hidden) {
+#expenseMessage:not(.hidden),
+#csvMessage:not(.hidden) {
     display: block !important;
     margin-top: 0.75rem !important;
 }
 
 /* Success State (Prasino) */
 #categoryMessage.bg-emerald-50,
-#expenseMessage.bg-emerald-50 {
+#expenseMessage.bg-emerald-50,
+#csvMessage.bg-emerald-50 {
     background-color: #ecfdf5 !important;
     color: #065f46 !important;
     border: 1px solid #a7f3d0 !important;
@@ -85,7 +97,8 @@ button[type="submit"]:hover {
 
 /* Error State (Kokkino) */
 #categoryMessage.bg-red-50,
-#expenseMessage.bg-red-50 {
+#expenseMessage.bg-red-50,
+#csvMessage.bg-red-50 {
     background-color: #fef2f2 !important;
     color: #991b1b !important;
     border: 1px solid #fecaca !important;
