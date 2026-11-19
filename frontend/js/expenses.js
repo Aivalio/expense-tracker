@@ -23,9 +23,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categorySelect = document.getElementById("category");
     const expensesList = document.getElementById("expensesList");
     const categoryForm = document.getElementById("categoryForm");
-    const searchInput = document.getElementById("searchInput"); // <-- Search Input
+    const searchInput = document.getElementById("searchInput");       // Search Input
+    const exportCsvBtn = document.getElementById("exportCsvBtn");   // Export CSV Button
 
-    // Global array to store fetched expenses for client-side filtering
+    // Global array to store fetched expenses for client-side filtering and export
     let allExpenses = [];
     
     // 2. CHECK USER AUTHENTICATION
@@ -159,6 +160,55 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
     
+    // 4.2 EXPORT CSV FUNCTIONALITY
+    if (exportCsvBtn) {
+        exportCsvBtn.addEventListener("click", () => {
+            if (!allExpenses || allExpenses.length === 0) {
+                showNotification("csvMessage", "No expenses available to export!", true);
+                return;
+            }
+
+            const headers = ["ID", "Description", "Amount (€)", "Date"];
+            
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+            const dataToExport = query 
+                ? allExpenses.filter(exp => exp.description && exp.description.toLowerCase().includes(query))
+                : allExpenses;
+
+            if (dataToExport.length === 0) {
+                showNotification("csvMessage", "No matching expenses found for export.", true);
+                return;
+            }
+
+            const csvRows = [];
+            csvRows.push(headers.join(","));
+
+            dataToExport.forEach(exp => {
+                const row = [
+                    exp.id,
+                    `"${(exp.description || "Expense").replace(/"/g, '""')}"`,
+                    exp.amount,
+                    `"${exp.date || "N/A"}"`
+                ];
+                csvRows.push(row.join(","));
+            });
+
+            const csvString = csvRows.join("\n");
+            const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `expenses_export_${new Date().toISOString().slice(0, 10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Εμφάνιση μηνύματος επιτυχίας
+            showNotification("csvMessage", "CSV exported successfully!");
+        });
+    }
+
     // 5. CREATE A NEW EXPENSE
     if (expenseForm) {
         expenseForm.addEventListener("submit", async (e) => {
