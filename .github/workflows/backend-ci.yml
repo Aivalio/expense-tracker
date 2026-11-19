@@ -2,9 +2,14 @@ name: Backend CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature/*" ]
+    # Paths to trigger the workflow only when changes are made in the backend directory
+    paths:
+      - 'backend/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'backend/**'
 
 jobs:
   lint-and-test:
