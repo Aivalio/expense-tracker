@@ -25,6 +25,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categoryForm = document.getElementById("categoryForm");
     const searchInput = document.getElementById("searchInput");       // Search Input
     const exportCsvBtn = document.getElementById("exportCsvBtn");   // Export CSV Button
+    
+    // Budget Elements
+    const budgetInput = document.getElementById("budgetInput");
+    const saveBudgetBtn = document.getElementById("saveBudgetBtn");
+    const budgetWarningBanner = document.getElementById("budgetWarningBanner");
+    const budgetWarningText = document.getElementById("budgetWarningText");
+    const budgetOverspendAmount = document.getElementById("budgetOverspendAmount");
 
     // Global array to store fetched expenses for client-side filtering and export
     let allExpenses = [];
@@ -35,6 +42,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!token) {
         window.location.href = "index.html";
         return;
+    }
+
+    // 2.1 LOAD SAVED BUDGET FROM LOCALSTORAGE
+    const savedBudget = localStorage.getItem("monthly_budget");
+    if (savedBudget && budgetInput) {
+        budgetInput.value = savedBudget;
     }
     
     // 3. LOAD CATEGORIES FROM THE BACKEND
@@ -125,6 +138,45 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // BUDGET CHECK & WARNING BANNER LOGIC
+    function checkBudgetWarning() {
+        if (!budgetWarningBanner) return;
+
+        const currentBudget = parseFloat(localStorage.getItem("monthly_budget"));
+        if (!currentBudget || isNaN(currentBudget) || currentBudget <= 0) {
+            budgetWarningBanner.classList.add("hidden");
+            return;
+        }
+
+        // Calculate current month expenses
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth(); // 0-indexed
+
+        let currentMonthTotal = 0;
+        allExpenses.forEach(exp => {
+            if (exp.date) {
+                const expDate = new Date(exp.date);
+                if (expDate.getFullYear() === currentYear && expDate.getMonth() === currentMonth) {
+                    currentMonthTotal += Number(exp.amount) || 0;
+                }
+            }
+        });
+
+        if (currentMonthTotal > currentBudget) {
+            const overspend = currentMonthTotal - currentBudget;
+            if (budgetWarningText) {
+                budgetWarningText.textContent = `You have spent €${currentMonthTotal.toFixed(2)} of your €${currentBudget.toFixed(2)} monthly budget.`;
+            }
+            if (budgetOverspendAmount) {
+                budgetOverspendAmount.textContent = `Over by €${overspend.toFixed(2)}`;
+            }
+            budgetWarningBanner.classList.remove("hidden");
+        } else {
+            budgetWarningBanner.classList.add("hidden");
+        }
+    }
+
     // 4. LOAD AND DISPLAY EXPENSES
     async function loadExpenses() {
         try {
@@ -137,10 +189,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (allExpenses.length === 0) {
                 expensesList.innerHTML =
                     '<p class="text-gray-500 text-center py-4">No expenses yet. Add one on the left!</p>';
+                checkBudgetWarning();
                 return;
             }
 
             renderExpenses(allExpenses);
+            checkBudgetWarning();
 
         } catch (error) {
             console.error("Error loading expenses:", error);
@@ -204,8 +258,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             link.click();
             document.body.removeChild(link);
 
-            // Εμφάνιση μηνύματος επιτυχίας
             showNotification("csvMessage", "CSV exported successfully!");
+        });
+    }
+
+    // 4.3 SAVE BUDGET EVENT LISTENER
+    if (saveBudgetBtn && budgetInput) {
+        saveBudgetBtn.addEventListener("click", () => {
+            const val = parseFloat(budgetInput.value);
+            if (isNaN(val) || val < 0) {
+                showNotification("budgetMessage", "Please enter a valid monthly budget!", true);
+                return;
+            }
+
+            localStorage.setItem("monthly_budget", val.toFixed(2));
+            showNotification("budgetMessage", "Monthly budget saved successfully!");
+            checkBudgetWarning();
         });
     }
 
