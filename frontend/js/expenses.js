@@ -1,6 +1,23 @@
 // Wait until the HTML document has completely loaded
 document.addEventListener("DOMContentLoaded", async () => {
 
+    // 0. HELPER FUNCTION FOR CLEAN NOTIFICATIONS UNDER BUTTONS
+    function showNotification(elementId, message, isError = false) {
+        const msgDiv = document.getElementById(elementId);
+        if (!msgDiv) return;
+
+        msgDiv.textContent = message;
+        if (isError) {
+            msgDiv.className = "p-3 rounded-lg text-xs font-medium bg-red-50 text-red-700 border border-red-300 block shadow-sm mt-2";
+        } else {
+            msgDiv.className = "p-3 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-300 block shadow-sm mt-2";
+        }
+
+        setTimeout(() => {
+            msgDiv.className = "hidden p-3 rounded-lg text-xs font-medium";
+        }, 4000);
+    }
+
     // 1. GET HTML ELEMENTS
     const expenseForm = document.getElementById("expenseForm");
     const categorySelect = document.getElementById("category");
@@ -8,10 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categoryForm = document.getElementById("categoryForm");
     
     // 2. CHECK USER AUTHENTICATION
-    // Get the authentication token from localStorage
     const token = localStorage.getItem("access_token");
 
-    // Stop execution if the user is not authenticated (Fixed to index.html for consistency)
     if (!token) {
         window.location.href = "index.html";
         return;
@@ -20,21 +35,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. LOAD CATEGORIES FROM THE BACKEND
     async function loadCategories() {
         try {
-            // Request all available categories from the API
             const categories = await fetchAPI("/categories/");
 
-            // Clear the dropdown before adding new options
             categorySelect.innerHTML =
                 '<option value="">Select a category</option>';
 
-            // Check whether any categories exist
             if (!categories || categories.length === 0) {
                 categorySelect.innerHTML =
                     '<option value="">No categories found. Create one first!</option>';
                 return;
             }
 
-            // Add each category to the dropdown menu
             categories.forEach((cat) => {
                 const option = document.createElement("option");
                 option.value = cat.id;
@@ -131,12 +142,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             const submitBtn = expenseForm.querySelector("button[type='submit']");
 
             if (!Number.isFinite(amount) || amount <= 0) {
-                alert("Please enter a valid expense amount.");
+                showNotification("expenseMessage", "Please enter a valid expense amount.", true);
                 return;
             }
 
             if (!Number.isInteger(category_id)) {
-                alert("Please select a category first!");
+                showNotification("expenseMessage", "Please select a category first!", true);
                 return;
             }
 
@@ -155,11 +166,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 expenseForm.reset();
                 await loadExpenses();
-                alert("Expense added successfully!");
+                showNotification("expenseMessage", "Expense added successfully!");
 
             } catch (error) {
                 console.error("Error adding expense:", error);
-                alert("Error adding expense: " + error.message);
+                showNotification("expenseMessage", "Error adding expense: " + error.message, true);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Save Expense";
@@ -175,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const categoryName = document.getElementById("newCategoryName").value.trim();
 
             if (!categoryName) {
-                alert("Please enter a category name.");
+                showNotification("categoryMessage", "Please enter a category name.", true);
                 return;
             }
 
@@ -198,11 +209,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 categoryForm.reset();
                 await loadCategories();
-                alert("Category created successfully!");
+                showNotification("categoryMessage", "Category created successfully!");
 
             } catch (error) {
                 console.error("Error creating category:", error);
-                alert("Error creating category: " + error.message);
+                showNotification("categoryMessage", "Error creating category: " + error.message, true);
             } finally {
                 categoryBtn.disabled = false;
                 categoryBtn.textContent = "Add";
@@ -223,11 +234,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
 
             await loadExpenses();
-            alert("Expense deleted successfully!");
+            // Optional: could show a notification if needed
 
         } catch (error) {
             console.error("Error deleting expense:", error);
-            alert("Error deleting expense: " + error.message);
         }
     }
     
