@@ -100,7 +100,8 @@
                                 Set
                             </button>
                             <button id="resetBudgetBtn" type="button" title="Reset Budget">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="23 4 23 10 17 10"></polyline>
                                     <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                                 </svg>
@@ -193,6 +194,46 @@
                         <p class="text-slate-500 text-sm">Loading expenses...</p>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Edit Expense Modal -->
+        <div id="editExpenseModal"
+            class="hidden fixed inset-0 bg-slate-900 bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="text-lg font-bold text-slate-800">Edit Expense</h3>
+                    <button id="closeEditModalBtn"
+                        class="text-slate-400 hover:text-slate-600 text-xl font-bold">×</button>
+                </div>
+                <form id="editExpenseForm" class="space-y-4">
+                    <div>
+                        <label for="editAmount" class="block text-sm font-medium text-slate-700">Amount (€)</label>
+                        <input type="number" id="editAmount" step="0.01" min="0.01" required
+                            class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div>
+                        <label for="editCategory" class="block text-sm font-medium text-slate-700">Category</label>
+                        <select id="editCategory" required
+                            class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            <!-- Γεμίζει δυναμικά -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editDescription"
+                            class="block text-sm font-medium text-slate-700">Description</label>
+                        <input type="text" id="editDescription" placeholder="e.g. Lunch"
+                            class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-2">
+                        <button type="button" id="cancelEditBtn"
+                            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition">Cancel</button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition">Save
+                            Changes</button>
+                    </div>
+                    <div id="editExpenseMessage" class="hidden p-3 rounded-lg text-xs font-medium"></div>
+                </form>
             </div>
         </div>
 
