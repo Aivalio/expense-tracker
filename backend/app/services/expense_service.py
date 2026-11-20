@@ -3,7 +3,7 @@ from pydantic_core.core_schema import deque_schema
 from sqlalchemy.orm import Session
 from datetime import date
 from app.models import User, Category, Expense
-from app.schemas.expense import ExpenseCreate
+from app.schemas.expense import ExpenseCreate, ExpenseUpdate
 
 
 
@@ -59,3 +59,24 @@ def delete_expense(db: Session, user: User, expense_id: int) -> bool:
     db.delete(expense)
     db.commit()
     return True
+
+
+
+def update_expense(db: Session, user: User, expense_id: int, expense_in: ExpenseUpdate) -> Expense:
+    """Function that updates an expense if it belongs to the user."""
+    expense = db.query(Expense).filter(
+        Expense.id == expense_id,
+        Expense.user_id == user.id).first()
+    
+    if not expense:
+        raise ValueError("Expense not found or does not belong to you.")
+    
+    # Get the data provided by the user, None is ignored
+    updated_data = expense_in.model_dump(exclude_unset=True)
+    
+    for key, value in updated_data.items():
+        setattr(expense, key, value) # Set the attribute of the expense object to the new value
+        
+    db.commit()
+    db.refresh(expense)
+    return expense
