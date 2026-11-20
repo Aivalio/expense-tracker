@@ -44,7 +44,7 @@ def remove_expense(
         return delete_expense(db, current_user, expense_id)
     except ValueError as e:
         raise HTTPException(
-            status_code=status.HTTP_400_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail=str(e))
         
         
