@@ -29,12 +29,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Budget Elements
     const budgetInput = document.getElementById("budgetInput");
     const saveBudgetBtn = document.getElementById("saveBudgetBtn");
+    const resetBudgetBtn = document.getElementById("resetBudgetBtn"); // Reset Budget Button
     const budgetWarningBanner = document.getElementById("budgetWarningBanner");
     const budgetWarningText = document.getElementById("budgetWarningText");
     const budgetOverspendAmount = document.getElementById("budgetOverspendAmount");
 
-    // Global array to store fetched expenses for client-side filtering and export
+    // Global arrays to store data
     let allExpenses = [];
+    let allCategories = []; // Αποθήκευση κατηγοριών για τα Badges
     
     // 2. CHECK USER AUTHENTICATION
     const token = localStorage.getItem("access_token");
@@ -53,18 +55,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. LOAD CATEGORIES FROM THE BACKEND
     async function loadCategories() {
         try {
-            const categories = await fetchAPI("/categories/");
+            allCategories = await fetchAPI("/categories/") || [];
 
             categorySelect.innerHTML =
                 '<option value="">Select a category</option>';
 
-            if (!categories || categories.length === 0) {
+            if (allCategories.length === 0) {
                 categorySelect.innerHTML =
                     '<option value="">No categories found. Create one first!</option>';
                 return;
             }
 
-            categories.forEach((cat) => {
+            allCategories.forEach((cat) => {
                 const option = document.createElement("option");
                 option.value = cat.id;
                 option.textContent = cat.name;
@@ -77,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
-    // Helper function to render a given array of expenses
+    // Helper function to render a given array of expenses with Category Badges
     function renderExpenses(expensesToRender) {
         expensesList.innerHTML = "";
 
@@ -93,15 +95,40 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "flex justify-between items-center p-4 border border-gray-200 rounded-lg bg-white shadow-sm mb-2 hover:bg-gray-50 transition-colors";
             
             const details = document.createElement("div");
+            details.className = "space-y-1";
+
+            const descriptionRow = document.createElement("div");
+            descriptionRow.className = "flex items-center space-x-2";
+
             const description = document.createElement("p");
             description.className = "font-bold text-gray-800";
             description.textContent = exp.description || "Expense";
+            descriptionRow.appendChild(description);
+
+            // --- CATEGORY BADGE LOGIC ---
+            // Βρίσκουμε την κατηγορία με βάση το category_id του εξόδου
+            const categoryObj = allCategories.find(c => c.id === exp.category_id);
+            if (categoryObj) {
+                const badge = document.createElement("span");
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-medium border shadow-xs";
+                badge.textContent = categoryObj.name;
+                
+                // Αν η κατηγορία έχει αποθηκευμένο χρώμα από το backend, το εφαρμόζουμε διακριτικά
+                if (categoryObj.color) {
+                    badge.style.backgroundColor = categoryObj.color + "20"; // 20% opacity για απαλό φόντο
+                    badge.style.color = categoryObj.color;
+                    badge.style.borderColor = categoryObj.color + "50";
+                } else {
+                    badge.className += " bg-blue-50 text-blue-700 border-blue-200";
+                }
+                descriptionRow.appendChild(badge);
+            }
 
             const date = document.createElement("p");
-            date.className = "text-xs text-gray-500 mt-1";
+            date.className = "text-xs text-gray-500";
             date.textContent = "📅 " + (exp.date || "Date unavailable");
 
-            details.appendChild(description);
+            details.appendChild(descriptionRow);
             details.appendChild(date);
 
             const actions = document.createElement("div");
@@ -138,16 +165,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // BUDGET CHECK & WARNING BANNER LOGIC
+    // BUDGET CHECK, WARNING BANNER & PROGRESS BAR LOGIC
     function checkBudgetWarning() {
-        if (!budgetWarningBanner) return;
-
-        const currentBudget = parseFloat(localStorage.getItem("monthly_budget"));
-        if (!currentBudget || isNaN(currentBudget) || currentBudget <= 0) {
-            budgetWarningBanner.classList.add("hidden");
-            return;
-        }
-
+        const currentBudget = parseFloat(localStorage.getItem("monthly_budget")) || 0;
+        
         // Calculate current month expenses
         const now = new Date();
         const currentYear = now.getFullYear();
@@ -162,6 +183,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
         });
+
+        // 1. Ενημέρωση της μπάρας προόδου (Budget Progress Bar)
+        if (typeof updateBudgetProgress === "function") {
+            updateBudgetProgress(currentMonthTotal, currentBudget);
+        }
+
+        // Ενημέρωση του card "Current Month"
+        const currentMonthExpensesEl = document.getElementById("currentMonthExpenses");
+        if (currentMonthExpensesEl) {
+            currentMonthExpensesEl.textContent = "€" + currentMonthTotal.toFixed(2);
+        }
+
+        if (!budgetWarningBanner) return;
+
+        if (currentBudget <= 0) {
+            budgetWarningBanner.classList.add("hidden");
+            return;
+        }
 
         if (currentMonthTotal > currentBudget) {
             const overspend = currentMonthTotal - currentBudget;
@@ -273,6 +312,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             localStorage.setItem("monthly_budget", val.toFixed(2));
             showNotification("budgetMessage", "Monthly budget saved successfully!");
+            checkBudgetWarning();
+        });
+    }
+
+    // 4.4 RESET BUDGET EVENT LISTENER
+    if (resetBudgetBtn && budgetInput) {
+        resetBudgetBtn.addEventListener("click", () => {
+            localStorage.removeItem("monthly_budget");
+            budgetInput.value = "";
+            showNotification("budgetMessage", "Monthly budget reset.");
             checkBudgetWarning();
         });
     }
