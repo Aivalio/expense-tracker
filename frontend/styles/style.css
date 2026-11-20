@@ -8,6 +8,10 @@ body {
     color: #1e293b;
 }
 
+body.auth-page {
+    background-color: #f3f4f6 !important;
+}
+
 /* Card Styling & Force Dark Text Inside Cards */
 .card-corporate {
     background: #ffffff;
