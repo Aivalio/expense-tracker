@@ -31,7 +31,6 @@
             </div>
         </div>
     </header>
-   
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-6">
@@ -100,6 +99,20 @@
                                 Set
                             </button>
                         </div>
+
+                        <!-- Budget Progress Bar -->
+                        <div id="budgetProgressContainer" class="space-y-1.5 pt-1">
+                            <div class="flex justify-between text-xs font-medium text-slate-600">
+                                <span id="budgetProgressLabel">Spent: €0.00 / €0.00</span>
+                                <span id="budgetPercentageLabel">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                                <div id="budgetProgressBar"
+                                    class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+
                         <div id="budgetMessage" class="hidden p-3 rounded-lg text-xs font-medium"></div>
                     </div>
                 </div>
@@ -156,7 +169,7 @@
                 <div class="card-corporate p-6">
                     <h2 class="text-lg font-bold text-slate-800 mb-4">Recent Expenses</h2>
 
-                    <!-- Search Bar & Export CSV στην ίδια ευθεία -->
+                    <!-- Search Bar & Export CSV -->
                     <div class="flex items-center w-full mb-3">
                         <input type="text" id="searchInput" placeholder="Search expenses by description..."
                             class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
