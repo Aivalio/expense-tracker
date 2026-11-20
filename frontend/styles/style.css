@@ -241,7 +241,57 @@ header div {
     box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
 }
 
-/* --- Budget Progress Bar Styling --- */
-#budgetProgressBar {
-    transition: width 0.4s ease, background-color 0.3s ease;
+/* --- Απόλυτη ευθυγράμμιση και ισορροπία για Set & Reset Budget --- */
+/* --- Τέλεια Ευθυγράμμιση & Πλήρης Κάλυψη Πλαισίου για Set & Reset --- */
+.budget-action-container {
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+}
+
+#budgetInput {
+    height: 42px !important;
+    box-sizing: border-box !important;
+}
+
+#saveBudgetBtn {
+    background-color: #d97706 !important;
+    color: #ffffff !important;
+    height: 42px !important;
+    padding: 0 1.25rem !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    border-radius: 0.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+}
+
+#resetBudgetBtn {
+    background-color: #e2e8f0 !important;
+    color: #334155 !important;
+    height: 42px !important;
+    width: 42px !important;
+    padding: 10px !important;
+    /* Ρυθμίζει πόσο χώρο πιάνει το βέλος εσωτερικά */
+    border-radius: 0.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    transition: background-color 0.2s ease;
+}
+
+#resetBudgetBtn svg {
+    width: 100% !important;
+    height: 100% !important;
+    stroke: #334155 !important;
+}
+
+#resetBudgetBtn:hover {
+    background-color: #cbd5e1 !important;
 }
