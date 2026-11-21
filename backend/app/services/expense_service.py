@@ -1,4 +1,5 @@
 """Expense Service: business logic."""
+from typing import Optional
 from pydantic_core.core_schema import deque_schema
 from sqlalchemy.orm import Session
 from datetime import date
@@ -7,9 +8,16 @@ from app.schemas.expense import ExpenseCreate, ExpenseUpdate
 
 
 
-def get_expenses(db: Session, user: User) -> list[Expense]:
+def get_expenses(db: Session, user: User, start_date: Optional[date] = None, end_date: Optional[date] = None) -> list[Expense]:
     """Function that returns all expenses belonging to the newest user"""
-    return db.query(Expense).filter(Expense.user_id == user.id).order_by(Expense.date.desc()).all()
+    query = db.query(Expense).filter(Expense.user_id == user.id)
+    
+    if start_date:
+        query = query.filter(Expense.date >= start_date)
+    if end_date:
+        query = query.filter(Expense.date <= end_date)
+        
+    return query.order_by(Expense.date.desc()).all() # Return the expenses ordered by date in descending order
 
 
 def create_expense(db: Session, user: User, expense_in: ExpenseCreate) -> Expense:
