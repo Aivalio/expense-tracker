@@ -1,6 +1,9 @@
 """Expense API routes"""
-from fastapi import Depends, HTTPException, status, APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter, Query
 from sqlalchemy.orm import Session
+
+from typing import Optional
+from datetime import date
 
 from app.core.dependencies import get_current_user
 from app.database import get_db
@@ -13,9 +16,10 @@ router = APIRouter(prefix="/expenses", tags=["expenses"])
 
 
 @router.get("/", response_model=list[ExpenseResponse])
-def read_expenses(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def read_expenses(
+    start_date: Optional[date] = Query(None, description="Start date filter (YYYY-MM-DD)"), end_date: Optional[date] = Query(None, description="End date filter (YYYY-MM-DD)"), db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     """Function that returns an expense list"""
-    return get_expenses(db, user)
+    return get_expenses(db, user, start_date=start_date, end_date=end_date)
 
 
 @router.post("/", response_model=ExpenseResponse, status_code=status.HTTP_201_CREATED)
