@@ -1,0 +1,161 @@
+/* --- Card Corporate --- */
+.card-corporate {
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--card-border, #cbd5e1);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+    color: var(--text-main, #1e293b) !important;
+    transform: translateY(0);
+}
+
+.card-corporate h2,
+.card-corporate h3,
+.card-corporate p,
+.card-corporate label {
+    color: var(--text-main, #1e293b) !important;
+}
+
+.card-corporate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* --- Input Fields --- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* --- Buttons --- */
+.btn-primary {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8 !important;
+}
+
+#exportCsvBtn {
+    background-color: #059669 !important;
+    color: #ffffff !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.5rem !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    flex-shrink: 0 !important;
+}
+
+#exportCsvBtn:hover {
+    opacity: 0.9;
+}
+
+#saveBudgetBtn {
+    background-color: #d97706 !important;
+    color: #ffffff !important;
+    height: 42px !important;
+    padding: 0 1.25rem !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    border-radius: 0.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+}
+
+#saveBudgetBtn:hover {
+    opacity: 0.9;
+}
+
+#resetBudgetBtn {
+    background-color: #e2e8f0 !important;
+    color: #334155 !important;
+    height: 42px !important;
+    width: 42px !important;
+    padding: 10px !important;
+    border-radius: 0.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    transition: background-color 0.2s ease;
+}
+
+#resetBudgetBtn svg {
+    width: 100% !important;
+    height: 100% !important;
+    stroke: #334155 !important;
+}
+
+#resetBudgetBtn:hover {
+    background-color: #cbd5e1 !important;
+}
+
+#expenseForm button[type="submit"] {
+    background-color: #2563eb !important;
+}
+
+#categoryForm button[type="submit"] {
+    background-color: #059669 !important;
+}
+
+/* Brand Badge */
+.brand-badge {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+    border: 1px solid #93c5fd !important;
+    padding: 0.4rem 0.85rem !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.brand-badge:hover {
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.15);
+    transform: translateY(-1px);
+}
+
+/* User Email Badge */
+#userEmail {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 9999px !important;
+    font-size: 0.85rem !important;
+    border: 1px solid #bae6fd !important;
+    font-weight: 500;
+}
+
+/* Logout Button */
+#logoutBtn {
+    background-color: #fee2e2 !important;
+    color: #991b1b !important;
+    font-weight: 600 !important;
+    border-radius: 0.5rem !important;
+    padding: 0.4rem 1rem !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+#logoutBtn:hover {
+    background-color: #fecaca !important;
+    color: #b91c1c !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+}

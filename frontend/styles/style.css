@@ -1,167 +1,22 @@
-/* Custom Clean Corporate Styles */
+/* --- Main Style Imports --- */
 @import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
+@import "variables.css";
+@import "layout.css";
+@import "components.css";
 
+/* --- Global Body & Base Styles --- */
 body {
-    background-color: #1e3a8a;
-    /* Βαθύ, έντονο corporate blue */
+    background-color: var(--bg-main, #1e3a8a);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #1e293b;
+    color: var(--text-main, #1e293b);
 }
 
 body.auth-page {
     background-color: #f3f4f6 !important;
 }
 
-/* Card Styling & Force Dark Text Inside Cards */
-.card-corporate {
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
-    color: #1e293b !important;
-}
-
-.card-corporate h2,
-.card-corporate h3,
-.card-corporate p,
-.card-corporate label {
-    color: #1e293b !important;
-}
-
-.card-corporate:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-}
-
-/* Input Fields Fix (Login, Register & Dashboard inputs) */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-select {
-    background-color: #ffffff !important;
-    color: #1e293b !important;
-    border: 1px solid #cbd5e1 !important;
-}
-
 input::placeholder {
     color: #94a3b8 !important;
-}
-
-/* Primary Button Corporate & Mobile Touch Fix */
-.btn-primary {
-    background-color: #2563eb !important;
-    color: #ffffff !important;
-    font-weight: 500;
-    border-radius: 0.5rem;
-    cursor: pointer !important;
-    touch-action: manipulation !important;
-    /* Άμεση απόκριση αφής σε κινητά */
-    transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-    background-color: #1d4ed8 !important;
-}
-
-/* Table Corporate Styling */
-.table-corporate th {
-    background-color: #f1f5f9;
-    color: #475569;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-}
-
-/* Specific Button Fixes for Dashboard Actions (Μόνο για το CSV και το Budget) */
-#exportCsvBtn,
-#saveBudgetBtn {
-    color: #ffffff !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 0.5rem !important;
-    font-weight: 500 !important;
-    white-space: nowrap !important;
-    cursor: pointer !important;
-    touch-action: manipulation !important;
-    flex-shrink: 0 !important;
-}
-
-#exportCsvBtn {
-    background-color: #059669 !important;
-    /* Πράσινο για CSV */
-}
-
-#expenseForm button[type="submit"] {
-    background-color: #2563eb !important;
-}
-
-#categoryForm button[type="submit"] {
-    background-color: #059669 !important;
-}
-
-#saveBudgetBtn {
-    background-color: #d97706 !important;
-    /* Amber for Budget */
-}
-
-#exportCsvBtn:hover,
-#saveBudgetBtn:hover {
-    opacity: 0.9;
-}
-
-/* Search & Export Row Layout Fix */
-#searchInput {
-    flex: 1 1 auto !important;
-    width: auto !important;
-    min-width: 0 !important;
-    margin-right: 0.5rem !important;
-}
-
-/* Dashboard Notification Message Styling */
-#dashboardMessage {
-    transition: all 0.3s ease-in-out;
-}
-
-/* Force Corporate Notification Backgrounds */
-#categoryMessage:not(.hidden),
-#expenseMessage:not(.hidden),
-#csvMessage:not(.hidden),
-#budgetMessage:not(.hidden) {
-    display: block !important;
-    margin-top: 0.75rem !important;
-}
-
-/* Success State (Prasino) */
-#categoryMessage.bg-emerald-50,
-#expenseMessage.bg-emerald-50,
-#csvMessage.bg-emerald-50,
-#budgetMessage.bg-emerald-50 {
-    background-color: #ecfdf5 !important;
-    color: #065f46 !important;
-    border: 1px solid #a7f3d0 !important;
-}
-
-/* Error State (Kokkino) */
-#categoryMessage.bg-red-50,
-#expenseMessage.bg-red-50,
-#csvMessage.bg-red-50,
-#budgetMessage.bg-red-50 {
-    background-color: #fef2f2 !important;
-    color: #991b1b !important;
-    border: 1px solid #fecaca !important;
-}
-
-/* --- Extra Premium UI Polish --- */
-
-.card-corporate {
-    transform: translateY(0);
-    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
-}
-
-.card-corporate:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
 input:focus,
@@ -171,8 +26,35 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
 }
 
-#budgetWarningBanner:not(.hidden) {
-    animation: fadeInSlide 0.3s ease-out forwards;
+/* Dashboard Notification Message Styling */
+#dashboardMessage {
+    transition: all 0.3s ease-in-out;
+}
+
+#categoryMessage:not(.hidden),
+#expenseMessage:not(.hidden),
+#csvMessage:not(.hidden),
+#budgetMessage:not(.hidden) {
+    display: block !important;
+    margin-top: 0.75rem !important;
+}
+
+#categoryMessage.bg-emerald-50,
+#expenseMessage.bg-emerald-50,
+#csvMessage.bg-emerald-50,
+#budgetMessage.bg-emerald-50 {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+    border: 1px solid #a7f3d0 !important;
+}
+
+#categoryMessage.bg-red-50,
+#expenseMessage.bg-red-50,
+#csvMessage.bg-red-50,
+#budgetMessage.bg-red-50 {
+    background-color: #fef2f2 !important;
+    color: #991b1b !important;
+    border: 1px solid #fecaca !important;
 }
 
 @keyframes fadeInSlide {
@@ -187,113 +69,6 @@ select:focus {
     }
 }
 
-/* --- Ζωντανό & Πολυτελές Navbar Styling --- */
-header {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(224, 242, 254, 0.95) 100%) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border-bottom: 2px solid rgba(59, 130, 246, 0.3) !important;
-    box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
-}
-
-header span,
-header div {
-    color: #1e293b !important;
-}
-
-/* Brand Title Badge with Distinct Background */
-.brand-badge {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
-    border: 1px solid #93c5fd !important;
-    padding: 0.4rem 0.85rem !important;
-    border-radius: 0.75rem !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
-}
-
-.brand-badge:hover {
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.15);
-    transform: translateY(-1px);
-}
-
-/* User Email Badge στο Navbar */
-#userEmail {
-    background-color: #e0f2fe !important;
-    color: #0369a1 !important;
-    padding: 0.25rem 0.75rem !important;
-    border-radius: 9999px !important;
-    font-size: 0.85rem !important;
-    border: 1px solid #bae6fd !important;
-    font-weight: 500;
-}
-
-/* Logout Button Ζωντανό & Modern */
-#logoutBtn {
-    background-color: #fee2e2 !important;
-    color: #991b1b !important;
-    font-weight: 600 !important;
-    border-radius: 0.5rem !important;
-    padding: 0.4rem 1rem !important;
-    transition: all 0.2s ease-in-out !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-#logoutBtn:hover {
-    background-color: #fecaca !important;
-    color: #b91c1c !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
-}
-
-/* --- Απόλυτη ευθυγράμμιση και ισορροπία για Set & Reset Budget --- */
-.budget-action-container {
-    display: flex !important;
-    align-items: stretch !important;
-    gap: 0.5rem !important;
-}
-
-#budgetInput {
-    height: 42px !important;
-    box-sizing: border-box !important;
-}
-
-#saveBudgetBtn {
-    background-color: #d97706 !important;
-    color: #ffffff !important;
-    height: 42px !important;
-    padding: 0 1.25rem !important;
-    font-weight: 600 !important;
-    font-size: 0.875rem !important;
-    border-radius: 0.5rem !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    white-space: nowrap !important;
-    box-sizing: border-box !important;
-    flex-shrink: 0 !important;
-}
-
-#resetBudgetBtn {
-    background-color: #e2e8f0 !important;
-    color: #334155 !important;
-    height: 42px !important;
-    width: 42px !important;
-    padding: 10px !important;
-    border-radius: 0.5rem !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
-    flex-shrink: 0 !important;
-    transition: background-color 0.2s ease;
-}
-
-#resetBudgetBtn svg {
-    width: 100% !important;
-    height: 100% !important;
-    stroke: #334155 !important;
-}
-
-#resetBudgetBtn:hover {
-    background-color: #cbd5e1 !important;
+#budgetWarningBanner:not(.hidden) {
+    animation: fadeInSlide 0.3s ease-out forwards;
 }
