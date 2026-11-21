@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categoryForm = document.getElementById("categoryForm");
     const searchInput = document.getElementById("searchInput");       // Search Input
     const exportCsvBtn = document.getElementById("exportCsvBtn");   // Export CSV Button
+    const exportPdfBtn = document.getElementById("exportPdfBtn");   // Export PDF Button
     
     // Filter Elements
     const startDateFilter = document.getElementById("startDateFilter");
@@ -341,7 +342,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // 4.4 SAVE BUDGET EVENT LISTENER
+    // 4.4 EXPORT PDF FUNCTIONALITY (Native Browser Print to PDF)
+    if (exportPdfBtn) {
+        exportPdfBtn.addEventListener("click", () => {
+            if (!allExpenses || allExpenses.length === 0) {
+                showNotification("csvMessage", "No expenses available to export as PDF!", true);
+                return;
+            }
+            window.print();
+        });
+    }
+
+    // 4.5 SAVE BUDGET EVENT LISTENER
     if (saveBudgetBtn && budgetInput) {
         saveBudgetBtn.addEventListener("click", () => {
             const val = parseFloat(budgetInput.value);
@@ -356,7 +368,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // 4.5 RESET BUDGET EVENT LISTENER
+    // 4.6 RESET BUDGET EVENT LISTENER
     if (resetBudgetBtn && budgetInput) {
         resetBudgetBtn.addEventListener("click", () => {
             localStorage.removeItem("monthly_budget");
