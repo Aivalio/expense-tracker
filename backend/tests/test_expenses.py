@@ -47,3 +47,34 @@ def test_create_expense_invalid_category(client, test_user):
         "description": "Invalid"
     }, headers=test_user)
     assert response.status_code == 400
+    
+    
+def test_filter_expenses_by_date(client, test_user):
+    """Test filtering expenses by start_date and end_date."""
+    # Create a category first
+    cat_res = client.post("/categories/", json={
+        "name": "Food", "color": "#ff0000"
+    }, headers=test_user)
+    category_id = cat_res.json()["id"]
+
+    # Create an expense (it will use the current date by default)
+    client.post("/expenses/", json={
+        "amount": 50.00,
+        "category_id": category_id,
+        "description": "Dinner"
+    }, headers=test_user)
+
+    # Test filter with a date range that includes today (e.g., current year range)
+    response = client.get("/expenses/?start_date=2026-01-01&end_date=2026-12-31", headers=test_user)
+    
+    assert response.status_code == 200
+    expenses = response.json()
+    assert isinstance(expenses, list)
+    assert len(expenses) >= 1
+    assert expenses[0]["description"] == "Dinner"
+
+    # Test filter with a date range in the past (should return empty list)
+    response_empty = client.get("/expenses/?start_date=2020-01-01&end_date=2020-01-31", headers=test_user)
+    
+    assert response_empty.status_code == 200
+    assert len(response_empty.json()) == 0
