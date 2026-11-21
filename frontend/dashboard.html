@@ -177,10 +177,27 @@
                 <div class="card-corporate p-6">
                     <h2 class="text-lg font-bold text-slate-800 mb-4">Recent Expenses</h2>
 
-                    <!-- Search Bar & Export CSV -->
-                    <div class="flex items-center w-full mb-3">
+                    <!-- Search Bar, Date Filters & Export CSV -->
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
                         <input type="text" id="searchInput" placeholder="Search expenses by description..."
-                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm flex-1 min-w-[200px]">
+
+                        <input type="date" id="startDateFilter" title="Start Date"
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-slate-600">
+
+                        <input type="date" id="endDateFilter" title="End Date"
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-slate-600">
+
+                        <button id="filterDateBtn" type="button"
+                            class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-sm transition">
+                            Filter
+                        </button>
+
+                        <button id="resetFilterBtn" type="button"
+                            class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition"
+                            title="Clear Filters">
+                            Clear
+                        </button>
 
                         <button id="exportCsvBtn" type="button" class="text-sm font-medium shadow-sm transition">
                             📥 Export to CSV
