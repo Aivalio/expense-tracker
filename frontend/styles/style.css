@@ -74,10 +74,9 @@ input::placeholder {
     letter-spacing: 0.05em;
 }
 
-/* Specific Button Fixes for Dashboard Actions */
+/* Specific Button Fixes for Dashboard Actions (Μόνο για το CSV και το Budget) */
 #exportCsvBtn,
 #saveBudgetBtn {
-    background-color: #059669 !important;
     color: #ffffff !important;
     padding: 0.5rem 1rem !important;
     border-radius: 0.5rem !important;
@@ -86,6 +85,11 @@ input::placeholder {
     cursor: pointer !important;
     touch-action: manipulation !important;
     flex-shrink: 0 !important;
+}
+
+#exportCsvBtn {
+    background-color: #059669 !important;
+    /* Πράσινο για CSV */
 }
 
 #expenseForm button[type="submit"] {
@@ -242,7 +246,6 @@ header div {
 }
 
 /* --- Απόλυτη ευθυγράμμιση και ισορροπία για Set & Reset Budget --- */
-/* --- Τέλεια Ευθυγράμμιση & Πλήρης Κάλυψη Πλαισίου για Set & Reset --- */
 .budget-action-container {
     display: flex !important;
     align-items: stretch !important;
@@ -276,7 +279,6 @@ header div {
     height: 42px !important;
     width: 42px !important;
     padding: 10px !important;
-    /* Ρυθμίζει πόσο χώρο πιάνει το βέλος εσωτερικά */
     border-radius: 0.5rem !important;
     display: inline-flex !important;
     align-items: center !important;
