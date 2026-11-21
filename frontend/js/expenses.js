@@ -26,6 +26,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchInput = document.getElementById("searchInput");       // Search Input
     const exportCsvBtn = document.getElementById("exportCsvBtn");   // Export CSV Button
     
+    // Filter Elements
+    const startDateFilter = document.getElementById("startDateFilter");
+    const endDateFilter = document.getElementById("endDateFilter");
+    const filterDateBtn = document.getElementById("filterDateBtn");
+    const resetFilterBtn = document.getElementById("resetFilterBtn");
+    
     // Budget Elements
     const budgetInput = document.getElementById("budgetInput");
     const saveBudgetBtn = document.getElementById("saveBudgetBtn");
@@ -226,18 +232,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // 4. LOAD AND DISPLAY EXPENSES
-    async function loadExpenses() {
+    // 4. LOAD AND DISPLAY EXPENSES WITH DATE FILTERING SUPPORT
+    async function loadExpenses(startDate = "", endDate = "") {
         try {
             expensesList.innerHTML =
                 '<p class="text-gray-500 text-center py-4">Loading expenses...</p>';
 
-            const expenses = await fetchAPI("/expenses/");
+            let url = "/expenses/";
+            const params = [];
+            if (startDate) params.push(`start_date=${startDate}`);
+            if (endDate) params.push(`end_date=${endDate}`);
+            if (params.length > 0) {
+                url += `?${params.join("&")}`;
+            }
+
+            const expenses = await fetchAPI(url);
             allExpenses = expenses || [];
 
             if (allExpenses.length === 0) {
                 expensesList.innerHTML =
-                    '<p class="text-gray-500 text-center py-4">No expenses yet. Add one on the left!</p>';
+                    '<p class="text-gray-500 text-center py-4">No expenses found for this period.</p>';
                 checkBudgetWarning();
                 return;
             }
@@ -252,7 +266,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // 4.1 SEARCH EVENT LISTENER
+    // 4.1 FILTER BUTTONS EVENT LISTENERS
+    if (filterDateBtn) {
+        filterDateBtn.addEventListener("click", () => {
+            const start = startDateFilter ? startDateFilter.value : "";
+            const end = endDateFilter ? endDateFilter.value : "";
+            loadExpenses(start, end);
+        });
+    }
+
+    if (resetFilterBtn) {
+        resetFilterBtn.addEventListener("click", () => {
+            if (startDateFilter) startDateFilter.value = "";
+            if (endDateFilter) endDateFilter.value = "";
+            loadExpenses();
+        });
+    }
+
+    // 4.2 SEARCH EVENT LISTENER
     if (searchInput) {
         searchInput.addEventListener("input", (e) => {
             const query = e.target.value.toLowerCase().trim();
@@ -263,7 +294,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
     
-    // 4.2 EXPORT CSV FUNCTIONALITY
+    // 4.3 EXPORT CSV FUNCTIONALITY
     if (exportCsvBtn) {
         exportCsvBtn.addEventListener("click", () => {
             if (!allExpenses || allExpenses.length === 0) {
@@ -310,7 +341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // 4.3 SAVE BUDGET EVENT LISTENER
+    // 4.4 SAVE BUDGET EVENT LISTENER
     if (saveBudgetBtn && budgetInput) {
         saveBudgetBtn.addEventListener("click", () => {
             const val = parseFloat(budgetInput.value);
@@ -325,7 +356,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // 4.4 RESET BUDGET EVENT LISTENER
+    // 4.5 RESET BUDGET EVENT LISTENER
     if (resetBudgetBtn && budgetInput) {
         resetBudgetBtn.addEventListener("click", () => {
             localStorage.removeItem("monthly_budget");
