@@ -78,3 +78,32 @@ def test_filter_expenses_by_date(client, test_user):
     
     assert response_empty.status_code == 200
     assert len(response_empty.json()) == 0
+    
+    
+def test_delete_category_cascades_expenses(client, test_user):
+    """Test that deleting a category also deletes associated expenses."""
+    
+    # Create a category
+    cat_res = client.post("/categories/", json={
+        "name": "Utilities", "color": "#00ff00"
+    }, headers=test_user)
+    assert cat_res.status_code == 201
+    category_id = cat_res.json()["id"]
+
+    # Create an expense under this category
+    exp_res = client.post("/expenses/", json={
+        "amount": 100.00,
+        "category_id": category_id,
+        "description": "Electricity bill"
+    }, headers=test_user)
+    assert exp_res.status_code == 201
+    expense_id = exp_res.json()["id"]
+    
+    # Delete the category
+    del_res = client.delete(f"/categories/{category_id}", headers=test_user)
+    assert del_res.status_code == 204
+
+    # Check that the expense is also deleted via cascade
+    get_exp_res = client.get("/expenses/", headers=test_user)
+    expenses = get_exp_res.json()
+    assert all(e["id"] != expense_id for e in expenses)
