@@ -1,5 +1,5 @@
 """The Category Model of the Application."""
-from datetime import datetime,timezone
+from datetime import datetime, timezone
 from sqlalchemy import String, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
@@ -18,10 +18,9 @@ class Category(Base):
     color: Mapped[str] = mapped_column(String(7), default="#6366f1")  # hex color
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
-    # Relationships
+    # Relationships (When a category is deleted, all its related expenses are also removed)
     user: Mapped["User"] = relationship(back_populates="categories")
-    expenses: Mapped[list["Expense"]] = relationship(back_populates="category")
-
+    expenses: Mapped[list["Expense"]] = relationship(back_populates="category", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         """A developer friendly function to return a short description of the Category."""
