@@ -12,8 +12,10 @@ describe("Expenses Dashboard & Edit Feature Tests", () => {
         // Ορισμός του mock ΠΑΝΤΑ καθαρά πριν από κάθε test
         global.fetchAPI = jest.fn();
 
-        // Set up standard DOM elements expected by expenses.js
+        // Set up standard DOM elements expected by expenses.js (συμπεριλαμβανομένων των categories list & summary)
         document.body.innerHTML = `
+            <h3 id="totalCategories">0</h3>
+            
             <form id="expenseForm">
                 <input id="amount" value="50" />
                 <select id="category">
@@ -29,6 +31,10 @@ describe("Expenses Dashboard & Edit Feature Tests", () => {
                 <input id="newCategoryName" value="Transport" />
                 <button type="submit">Add</button>
             </form>
+
+            <!-- Container για τις υπάρχουσες κατηγορίες και τα μηνύματά τους -->
+            <div id="categoriesList"></div>
+            <div id="categoryMessage"></div>
 
             <input id="searchInput" />
             <button id="exportCsvBtn"></button>
@@ -96,6 +102,10 @@ describe("Expenses Dashboard & Edit Feature Tests", () => {
 
         expect(expensesList.textContent).toContain("Coffee");
         expect(expensesList.textContent).toContain("€25.50");
+        
+        // Έλεγχος ότι ενημερώθηκε και το totalCategories counter
+        const totalCategories = document.getElementById("totalCategories");
+        expect(totalCategories.textContent).toBe("1");
     });
 
 
@@ -165,6 +175,56 @@ describe("Expenses Dashboard & Edit Feature Tests", () => {
         });
 
         expect(putCallFound).toBe(true);
+    });
+
+
+    test("should handle deleting a category and send DELETE request", async () => {
+        // Mock του window.confirm ώστε να επιστρέφει true (να προχωρά η διαγραφή)
+        jest.spyOn(window, "confirm").mockReturnValue(true);
+
+        global.fetchAPI.mockImplementation((endpoint, options) => {
+            if (endpoint === "/categories/") {
+                return Promise.resolve([
+                    { id: 1, name: "Food", color: "#ff0000" }
+                ]);
+            }
+
+            if (endpoint === "/expenses/") {
+                return Promise.resolve([]);
+            }
+
+            if (endpoint === "/categories/1" && options && options.method === "DELETE") {
+                return Promise.resolve(null); // 24 No Content / Success
+            }
+
+            return Promise.resolve(null);
+        });
+
+        // Mock και του global.fetch σε περίπτωση που χρησιμοποιείται απευθείας fetch για το DELETE
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 204,
+            json: async () => ({})
+        });
+
+        require("../js/expenses.js");
+        document.dispatchEvent(new Event("DOMContentLoaded"));
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+
+        // Εντοπισμός του κουμπιού διαγραφής κατηγορίας που δημιουργήθηκε δυναμικά στη λίστα
+        const deleteCatButton = document.querySelector('#categoriesList button');
+        expect(deleteCatButton).not.toBeNull();
+        
+        // Κλικ στο κουμπί διαγραφής κατηγορίας
+        deleteCatButton.click();
+
+        await new Promise(resolve => setTimeout(resolve, 50));
+
+        // Επιβεβαίωση ότι κλήθηκε το confirm dialog
+        expect(window.confirm).toHaveBeenCalled();
+
+        window.confirm.mockRestore();
     });
 
 
