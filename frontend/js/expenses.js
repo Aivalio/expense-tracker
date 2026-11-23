@@ -64,20 +64,62 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             allCategories = await fetchAPI("/categories/") || [];
 
+            // Update the summary card "Categories" top right
+            const totalCategoriesEl = document.getElementById("totalCategories");
+            if (totalCategories) {
+                totalCategoriesEl.textContent = allCategories.length;
+            }
+
+
+            // 1. Γέμισμα του Dropdown για τα έξοδα
             categorySelect.innerHTML =
                 '<option value="">Select a category</option>';
+
+            // 2. Γέμισμα της λίστας διαχείρισης κατηγοριών (Existing Categories)
+            const categoriesListContainer = document.getElementById("categoriesList");
+            if (categoriesListContainer) {
+                categoriesListContainer.innerHTML = "";
+            }
 
             if (allCategories.length === 0) {
                 categorySelect.innerHTML =
                     '<option value="">No categories found. Create one first!</option>';
+                if (categoriesListContainer) {
+                    categoriesListContainer.innerHTML = '<p class="text-slate-400 text-xs">No categories created yet.</p>';
+                }
                 return;
             }
 
             allCategories.forEach((cat) => {
+                // Γέμισμα select
                 const option = document.createElement("option");
                 option.value = cat.id;
                 option.textContent = cat.name;
                 categorySelect.appendChild(option);
+
+                // Γέμισμα λίστας κατηγοριών με κουμπί διαγραφής
+                if (categoriesListContainer) {
+                    const catRow = document.createElement("div");
+                    catRow.className = "flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-100 text-sm";
+                    
+                    catRow.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full inline-block" style="background-color: ${cat.color || '#6366f1'};"></span>
+                            <span class="font-medium text-slate-700">${cat.name}</span>
+                        </div>
+                        <button type="button" class="text-slate-400 hover:text-red-600 transition-colors p-1" title="Delete category">
+                            🗑️
+                        </button>
+                    `;
+
+                    // Σύνδεση του click event για διαγραφή κατηγορίας
+                    const deleteBtn = catRow.querySelector("button");
+                    deleteBtn.addEventListener("click", () => {
+                        deleteCategory(cat.id, cat.name);
+                    });
+
+                    categoriesListContainer.appendChild(catRow);
+                }
             });
         } catch (error) {
             console.error("Error loading categories:", error);
@@ -466,6 +508,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                 categoryBtn.textContent = "Add";
             }
         });
+    }
+
+    // 7.1 DELETE A CATEGORY (CASCADE DELETE EXPENSES)
+    async function deleteCategory(categoryId, categoryName) {
+        const confirmed = confirm(
+            `Προσοχή! Είσαι σίγουρος ότι θέλεις να διαγράψεις την κατηγορία "${categoryName}";\n\n` +
+            `Θα διαγραφούν ΟΡΙΣΤΙΚΑ και όλα τα έξοδα που ανήκουν σε αυτήν την κατηγορία.`
+        );
+        if (!confirmed) return;
+
+        try {
+            await fetchAPI(`/categories/${categoryId}`, {
+                method: "DELETE"
+            });
+            
+            // Ανανέωση τόσο των κατηγοριών όσο και των εξόδων/γραφημάτων
+            await loadCategories();
+            await loadExpenses();
+            showNotification("categoryMessage", `Category "${categoryName}" deleted successfully.`);
+        } catch (error) {
+            console.error("Error deleting category:", error);
+            showNotification("categoryMessage", "Error deleting category: " + error.message, true);
+        }
     }
 
     // 7. DELETE AN EXPENSE
